@@ -1,11 +1,17 @@
 var express = require('express');
 var router = express.Router();
 
+
 var quizController = require('../controllers/quiz_controller');
 
-/* GET home page. */
+// Pagina de inicio
 router.get('/', function(req, res, next) {
   res.render('index');
+});
+
+// Pagina de ayuda
+router.get('/help', function(req, res, next) {
+    res.render('help');
 });
 
 // Pagina de creditos
