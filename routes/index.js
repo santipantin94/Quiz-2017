@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 
+
 var quizController = require('../controllers/quiz_controller');
 var tipController = require('../controllers/tip_controller');
 var userController = require('../controllers/user_controller');
@@ -36,9 +37,19 @@ router.get(/(?!\/new$|\/edit$|\/play$|\/check$|\/session$|\/(\d+)$)\/[^\/]*$/, f
 
 //-----------------------------------------------------------
 
+
 /* GET home page. */
 router.get('/', function (req, res, next) {
     res.render('index');
+
+// Pagina de inicio
+router.get('/', function(req, res, next) {
+  res.render('index');
+});
+
+// Pagina de ayuda
+router.get('/help', function(req, res, next) {
+    res.render('help');
 });
 
 // Pagina de creditos
@@ -130,6 +141,9 @@ router.put('/quizzes/:quizId(\\d+)/tips/:tipId(\\d+)/accept',
 router.delete('/quizzes/:quizId(\\d+)/tips/:tipId(\\d+)',
     sessionController.loginRequired,
     tipController.destroy);
+
+router.get('/quizzes/randomplay', quizController.randomPlay);
+router.get('/quizzes/randomcheck/:quizId(\\d+)', quizController.randomCheck)
 
 
 module.exports = router;

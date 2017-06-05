@@ -222,3 +222,63 @@ exports.check = function (req, res, next) {
         answer: answer
     });
 };
+
+// GET /quizzes/random_play
+exports.randomPlay = function (req, res, next) {
+    var score = req.session.score || 0;
+    var game = req.session.game || [];
+
+    models.Quiz.findAll()
+        .then(
+            function (quizzes) {
+                if (quizzes.length == game.length) {
+                    res.render('quizzes/random_none', {
+                        score: score
+                    })
+                }
+                do {
+                    var quizId = Math.floor(Math.random() * (quizzes.length - 1)) + 1;
+                } while (game.indexOf(quizId) != -1);
+
+                models.Quiz.findById(quizId)
+                    .then(
+                        function (quiz) {
+                            var answer = req.query.answer || '';
+                            if (quiz) {
+                                game.push(quizId);
+                                res.render('quizzes/random_play', {
+                                    quiz: quiz,
+                                    score: score,
+                                    answer: answer
+                                });
+
+                            } else {
+                                throw new Error('No existe ningún quiz con id=' + quizId);
+                            }
+                        }
+                    )
+            }
+        ).catch(
+            function (error) {
+                next(error);
+            }
+        )
+}
+
+// GET /quizzes/:quizId/randomcheck
+exports.randomCheck = function (req, res, next) {
+    var answer = req.query.answer || "";
+    var result = answer.toLowerCase().trim() === req.quiz.answer.toLowerCase().trim();
+    
+    if (result) {
+        req.session.score++;
+    } else {
+        req.session.score = 0;
+    }
+
+    res.render('quizzes/random_result', {
+        score: req.session.score,
+        answer: answer,
+        result: result
+    });
+}
