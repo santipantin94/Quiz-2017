@@ -15,6 +15,7 @@ exports.load = function (req, res, next, quizId) {
     .then(function (quiz) {
         if (quiz) {
             req.quiz = quiz;
+            req.tip = quiz.Tip;
             next();
         } else {
             throw new Error('No existe ningún quiz con id=' + quizId);
