@@ -1,7 +1,6 @@
 var express = require('express');
 var router = express.Router();
 
-
 var quizController = require('../controllers/quiz_controller');
 var tipController = require('../controllers/tip_controller');
 var userController = require('../controllers/user_controller');
@@ -37,26 +36,15 @@ router.get(/(?!\/new$|\/edit$|\/play$|\/check$|\/session$|\/(\d+)$)\/[^\/]*$/, f
 
 //-----------------------------------------------------------
 
-
 /* GET home page. */
 router.get('/', function (req, res, next) {
     res.render('index');
-
-// Pagina de inicio
-router.get('/', function(req, res, next) {
-  res.render('index');
-});
-
-// Pagina de ayuda
-router.get('/help', function(req, res, next) {
-    res.render('help');
 });
 
 // Pagina de creditos
 router.get('/author', function (req, res, next) {
     res.render('author');
 });
-
 
 // Autoload de rutas que usen :quizId
 router.param('quizId', quizController.load);
@@ -139,11 +127,16 @@ router.put('/quizzes/:quizId(\\d+)/tips/:tipId(\\d+)/accept',
     quizController.adminOrAuthorRequired,
     tipController.accept);
 router.delete('/quizzes/:quizId(\\d+)/tips/:tipId(\\d+)',
-    sessionController.loginRequired,
+    sessionController.adminOrTipCreator,
     tipController.destroy);
 
-router.get('/quizzes/randomplay', quizController.randomPlay);
+router.get('/quizzes/randomplay', quizController.random);
 router.get('/quizzes/randomcheck/:quizId(\\d+)', quizController.randomCheck);
 
+
+// Pagina de ayuda
+router.get('/help', function(req, res, next) {
+    res.render('ayuda');
+});
 
 module.exports = router;
