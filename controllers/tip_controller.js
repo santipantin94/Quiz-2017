@@ -88,13 +88,21 @@ exports.accept = function (req, res, next) {
 
 // DELETE /quizzes/:quizId/tips/:tipId
 exports.destroy = function (req, res, next) {
-
-    req.tip.destroy()
-    .then(function () {
-        req.flash('success', 'Pista eliminada con éxito.');
-        res.redirect('/quizzes/' + req.params.quizId);
-    })
-    .catch(function (error) {
-        next(error);
-    });
-};
+      
+     var isAdmin  = req.session.user.isAdmin;
+     var isAuthor = req.quiz.AuthorId === req.session.user.id;
+     var isAuthorTip = req.tip.AuthorId === req.session.user.id;
+ 
+     if (isAdmin || isAuthor || isAuthorTip) {
+         req.tip.destroy()
+             .then(function () {
+                 req.flash('success', 'Pista eliminada con éxito.');
+                 res.redirect('/quizzes/' + req.params.quizId);
+             })
+             .catch(function (error) {
+                 next(error);
+             });
+     } else {
+         console.log('Operación denegada: El usuario logeado no es el autor del quiz, ni un administrador.');
+         res.send(403);
+     }
