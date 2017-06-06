@@ -5,7 +5,11 @@ var Sequelize = require('sequelize');
 // Autoload la pista asociado a :tipId
 exports.load = function (req, res, next, tipId) {
 
-    models.Tip.findById(tipId)
+     models.Tip.findById(tipId, {
+         include: [
+             {model: models.User, as: 'Author'}
+         ]
+     })
     .then(function (tip) {
         if (tip) {
             req.tip = tip;
@@ -106,3 +110,4 @@ exports.destroy = function (req, res, next) {
          console.log('Operación denegada: El usuario logeado no es el autor del quiz, ni un administrador.');
          res.send(403);
      }
+};
