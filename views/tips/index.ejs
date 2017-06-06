@@ -3,6 +3,10 @@
 <ul>
     <% for (var i in tips) { %>
         <% var tip = tips[i]; %>
+        
+        <% var isAccepted = tip.accepted; %>
+        <% var isAdmin = session.user && session.user.isAdmin; %>
+        <% var isAuthor = session.user && quizAuthorId && quizAuthorId === session.user.id; %>
 
         <li>
 
