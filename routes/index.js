@@ -143,7 +143,7 @@ router.delete('/quizzes/:quizId(\\d+)/tips/:tipId(\\d+)',
     tipController.destroy);
 
 router.get('/quizzes/randomplay', quizController.randomPlay);
-router.get('/quizzes/randomcheck/:quizId(\\d+)', quizController.randomCheck)
+router.get('/quizzes/randomcheck/:quizId(\\d+)', quizController.randomCheck);
 
 
 module.exports = router;
